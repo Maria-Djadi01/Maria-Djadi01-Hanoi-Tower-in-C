@@ -2,11 +2,13 @@
 #include <stdlib.h>
 #include "hanoi.h"
 #include <math.h>
+#include <time.h>
 
 
 
 int main() {
-    int n = 3;
+    int n = 5;
+    double time_spent = 0;  
 
     stack source, dest, aux;
     // initiation of the towers
@@ -19,15 +21,24 @@ int main() {
     source = fillTower(n, source);
 
 
-    printf("Source tower \n");
-    printStack(source);
-    printf("\n");
+    printf("Start puzzle\n");
+    printTowers(source, aux, dest);
+
+    // Start the timer
+    clock_t begin = clock(); 
 
     // hanoi function
-    hanoiIter(n, &source, &dest, &aux);
+    if(n % 2 == 0) hanoiIter(n, &source, &aux, &dest);
+    else hanoiIter(n, &source, &dest, &aux);
     
-    printf("\n\nDestination tower \n");
-    printStack(dest);
+    // Stop the timer
+    clock_t end = clock(); 
+
+    // Calculate the time spent
+    time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+
+    printf("\n\nEnd puzzle\n");
+    printTowers(source, aux, dest);
 }
 
 void hanoiRec(int n, stack* source, stack* dest, stack* aux) {
@@ -48,7 +59,7 @@ void hanoiRec(int n, stack* source, stack* dest, stack* aux) {
 
 
 void hanoiIter(int n, stack* source, stack* dest, stack* aux) {
-    int nbMoves = pow(2, n) - 1;
+    long long nbMoves = pow(2, n) - 1;
     // Temporary stack
     stack *temp;
 
@@ -67,13 +78,13 @@ void hanoiIter(int n, stack* source, stack* dest, stack* aux) {
         // Legal movement between auxilary and destination
         if(i % 3 == 0) makeLegalMove(aux, dest, 'A', 'D');
 
-        printf("\n-------------i = %d------------", i);
-        printf("\nSource \n");
-        printStack(*source);
-        printf("\nAux \n");
-        printStack(*aux);
-        printf("\nDest \n");
-        printStack(*dest);
+        // printf("\n-------------i = %d------------", i);
+        // printf("\nSource \n");
+        // printStack(*source);
+        // printf("\nAux \n");
+        // printStack(*aux);
+        // printf("\nDest \n");
+        // printStack(*dest);
     }
 }
 
@@ -159,10 +170,21 @@ int pop(stack* st) {
 }
 
 void printStack(stack st) {
-    if(emptyStack(st)) printf("The stack is empty \n");
+    if(emptyStack(st)) printf("The stack is empty");
     else {
         for(int i = 0; i <= st.top; i++) {
         printf("%d  ", st.arr[i]);
         }
     }
+}
+
+void printTowers(stack source, stack aux, stack dest) {
+    printf("Source Tower : ");
+    printStack(source);
+
+    printf("\nAuxilary Tower : ");
+    printStack(aux);
+
+    printf("\nDestination Tower : ");
+    printStack(dest);
 }

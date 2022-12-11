@@ -27,6 +27,7 @@ int pop(stack* st);
 // Print the stack
 void printStack(stack st);
 
+void printTowers(stack source, stack aux, stack dest);
 //   ******************* Hanoi funtions *******************
 
 // Hanoi recursive function
