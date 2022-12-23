@@ -33,6 +33,8 @@ void printTowers(stack source, stack aux, stack dest);
 // Hanoi recursive function
 void hanoiRec(int n, stack* source, stack* dest, stack* aux);
 
+int verification(stack src, stack dest, stack aux);
+
 // Make legal move from source to destination tower
 void makeLegalMove(stack* source, stack* dest, char s, char d);
 

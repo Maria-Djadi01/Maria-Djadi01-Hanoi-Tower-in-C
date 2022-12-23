@@ -18,27 +18,42 @@ int main() {
     source = init(source);
 
     // fill the source tower
-    source = fillTower(n, source);
-
-
     printf("Start puzzle\n");
+
+    source = fillTower(n, source);
     printTowers(source, aux, dest);
 
     // Start the timer
     clock_t begin = clock(); 
 
     // hanoi function
-    if(n % 2 == 0) hanoiIter(n, &source, &aux, &dest);
-    else hanoiIter(n, &source, &dest, &aux);
+    // if(n % 2 == 0) hanoiIter(n, &source, &aux, &dest);
+    // else hanoiIter(n, &source, &dest, &aux);
+
+    hanoiRec(n, &source, &dest, &aux);
     
     // Stop the timer
     clock_t end = clock(); 
+    
 
     // Calculate the time spent
     time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
 
-    printf("\n\nEnd puzzle\n");
     printTowers(source, aux, dest);
+    printf("\n\nThe time spent in hanoi algo is : %f seconds\n", time_spent);
+    printf("\nEnd puzzle\n");
+
+
+
+    clock_t begin2 = clock(); 
+    int ver = verification(source, dest, aux);
+    clock_t end2 = clock(); 
+
+
+    int time_spent2 = (double)(end2 - begin2) / CLOCKS_PER_SEC;
+    printf("\nThe time spent in verification algo is : %f seconds\n", time_spent2);
+
+    printf("%d " , ver);
 }
 
 void hanoiRec(int n, stack* source, stack* dest, stack* aux) {
@@ -77,7 +92,6 @@ void hanoiIter(int n, stack* source, stack* dest, stack* aux) {
         if(i % 3 == 2) makeLegalMove(source, aux, 'S', 'A');
         // Legal movement between auxilary and destination
         if(i % 3 == 0) makeLegalMove(aux, dest, 'A', 'D');
-
         // printf("\n-------------i = %d------------", i);
         // printf("\nSource \n");
         // printStack(*source);
@@ -130,11 +144,24 @@ void makeLegalMove(stack* source, stack* dest, char s, char d) {
     }
 }
 
+int verification(stack src, stack dest, stack aux) {
+    if(!emptyStack(src)) return 0;
+    if(!emptyStack(aux)) return 0;
+    if(emptyStack(dest)) return 0;
+    int size = dest.top;
+    for(int i = 0; i < size; i++) {
+        int topDisk = pop(&dest);
+        if(topDisk != dest.arr[dest.top] - 1) return 0;
+    }
+    return 1;
+}
+
+
+
+
 
 stack fillTower(int n, stack st) {
-    for(int i = n; i > 0; i--) {
-        st = push(st, i);
-    }
+    for(int i = n; i > 0; i--) st = push(st, i);
     return st;
 }
 
